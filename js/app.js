@@ -1,7 +1,6 @@
 const canvas = $("#myCanvas")[0];
 const ctx = canvas.getContext("2d");
-// canvas.width = 400;
-// canvas.height = 800;
+
 const cw = canvas.width;
 const ch = canvas.height;
 const padding = 0;
@@ -28,7 +27,6 @@ const jShape = [
   [0, 1],
   [1, 1],
 ];
-
 const sShape = [
   [0, 1, 1],
   [1, 1, 0],
@@ -56,8 +54,6 @@ let currentI = iShape,
 
 function init() {
   setupGrid();
-  sendL();
-
   $(document).keydown(function (event) {
     if (event.which === 40) {
       //down arrow
@@ -99,7 +95,6 @@ function setupGrid() {
     col++;
     row = 0;
   }
-  console.log(grid);
 }
 
 function moveDown() {
@@ -271,6 +266,44 @@ function resetLShape() {
   currentL = lShape;
 }
 
+function sendRandomPiece() {
+  const randomIndex = Math.floor(Math.random() * pieces.length);
+  const randomPiece = pieces[randomIndex];
+  switch (randomPiece) {
+    case "I":
+      sendI();
+      //already defined
+      break;
+    case "J":
+      sendJ();
+      //need to define this
+      break;
+    case "L":
+      sendL();
+      //already defined
+      break;
+    case "O":
+      sendO();
+      //need to define this
+      break;
+    case "S":
+      sendS();
+      // need to define this
+      break;
+    case "T":
+      sendT();
+      //need to define this
+      break;
+    case "Z":
+      sendZ();
+      //need to define this
+      break;
+    default:
+      console.error("Unknown piece:", randomPiece);
+  }
+}
+
 $(() => {
   init();
+  sendRandomPiece();
 });
