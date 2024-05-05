@@ -95,15 +95,18 @@ function init() {
       }
     }
   });
+
+  console.log(grid);
 }
 
 function setupGrid() {
   let col = 0;
   let row = 0;
+  ctx.strokeStyle = "black";
+
   for (let i = 0; i <= cw; i += 40) {
-    ctx.moveTo(i + padding, padding);
-    ctx.lineTo(i + padding, ch + padding);
-    ctx.strokeStyle = "black";
+    ctx.moveTo(i, padding);
+    ctx.lineTo(i, ch - padding);
     ctx.stroke();
     grid.push([]);
     for (let j = 0; j <= ch; j += 40) {
@@ -137,6 +140,7 @@ function moveDown() {
   } else if (currentPiece === "O") {
     drawO(currentX, currentY);
   }
+  console.log(grid);
 }
 
 function moveLeft() {
@@ -635,7 +639,7 @@ function clearPrevious() {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] !== 0) {
-        drawBlock(j, i, "white");
+        drawBlock(i, j, "white");
       }
     }
   }
