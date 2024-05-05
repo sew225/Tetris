@@ -13,11 +13,17 @@ const sColor = "#0FFF50"; //neon green
 const tColor = "purple";
 const oColor = "yellow";
 
+let currentWidth;
+let currentHeight;
+
 let currentPiece;
 let currentX;
 let currentY;
 let currentRotation = 0;
 let rotatedState;
+let pieceInMotion;
+let intervalId;
+
 const pieces = ["I", "J", "L", "O", "S", "T", "Z"];
 const grid = [];
 const iShape = [
@@ -66,6 +72,8 @@ let currentI = iShape,
 
 function init() {
   setupGrid();
+  sendRandomPiece();
+
   $(document).keydown(function (event) {
     if (event.which === 40) {
       //down arrow
@@ -95,7 +103,11 @@ function init() {
       }
     }
   });
+  if (pieceInMotion) {
+    intervalId = setInterval(moveDown, 1000);
+  }
 
+  console.log("current piece: " + currentPiece);
   console.log(grid);
 }
 
@@ -121,711 +133,6 @@ function setupGrid() {
     row = 0;
   }
 }
-
-function moveDown() {
-  clearPrevious();
-  currentY++;
-  if (currentPiece === "I") {
-    drawI(currentX, currentY);
-  } else if (currentPiece === "L") {
-    drawL(currentX, currentY);
-  } else if (currentPiece === "J") {
-    drawJ(currentX, currentY);
-  } else if (currentPiece === "S") {
-    drawS(currentX, currentY);
-  } else if (currentPiece === "Z") {
-    drawZ(currentX, currentY);
-  } else if (currentPiece === "T") {
-    drawT(currentX, currentY);
-  } else if (currentPiece === "O") {
-    drawO(currentX, currentY);
-  }
-  console.log(grid);
-}
-
-function moveLeft() {
-  clearPrevious();
-  currentX--;
-  if (currentPiece === "I") {
-    drawI(currentX, currentY);
-  } else if (currentPiece === "L") {
-    drawL(currentX, currentY);
-  } else if (currentPiece === "J") {
-    drawJ(currentX, currentY);
-  } else if (currentPiece === "S") {
-    drawS(currentX, currentY);
-  } else if (currentPiece === "Z") {
-    drawZ(currentX, currentY);
-  } else if (currentPiece === "T") {
-    drawT(currentX, currentY);
-  } else if (currentPiece === "O") {
-    drawO(currentX, currentY);
-  }
-}
-
-function moveRight() {
-  clearPrevious();
-  currentX++;
-  if (currentPiece === "I") {
-    drawI(currentX, currentY);
-  } else if (currentPiece === "L") {
-    drawL(currentX, currentY);
-  } else if (currentPiece === "J") {
-    drawJ(currentX, currentY);
-  } else if (currentPiece === "S") {
-    drawS(currentX, currentY);
-  } else if (currentPiece === "Z") {
-    drawZ(currentX, currentY);
-  } else if (currentPiece === "T") {
-    drawT(currentX, currentY);
-  } else if (currentPiece === "O") {
-    drawO(currentX, currentY);
-  }
-}
-
-function sendI() {
-  currentPiece = "I";
-  currentRotation = 0;
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawI(startX, startY);
-}
-
-function drawI(x, y) {
-  for (let i = 0; i < iShape.length; i++) {
-    for (let j = 0; j < iShape[i].length; j++) {
-      if (iShape[i][j]) {
-        drawBlock(x + j, y + i, iColor);
-      }
-    }
-  }
-}
-
-function sendL() {
-  currentRotation = 0;
-  currentPiece = "L";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawL(startX, startY);
-}
-
-function drawL(x, y) {
-  for (let i = 0; i < lShape.length; i++) {
-    for (let j = 0; j < lShape[i].length; j++) {
-      if (lShape[i][j]) {
-        drawBlock(x + j, y + i, lColor);
-      }
-    }
-  }
-}
-
-function rotateI(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-      [0, 0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, iColor);
-        }
-      }
-    }
-    currentI = rotatedState; //error
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0, 0],
-      [0, 0, 0, 0],
-      [1, 1, 1, 1],
-      [0, 0, 0, 0],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, iColor);
-        }
-      }
-    }
-    currentI = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-      [0, 1, 0, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, iColor);
-        }
-      }
-    }
-    currentI = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = iShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, iColor);
-        }
-      }
-    }
-    currentI = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function rotateL(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 1, 0],
-      [0, 1, 0],
-      [0, 1, 1],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, lColor);
-        }
-      }
-    }
-    currentL = rotatedState; //error
-
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0],
-      [1, 1, 1],
-      [1, 0, 0],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, lColor);
-        }
-      }
-    }
-    currentL = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [1, 1, 0],
-      [0, 1, 0],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, lColor);
-        }
-      }
-    }
-    currentL = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = lShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, lColor);
-        }
-      }
-    }
-    currentJ = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function rotateJ(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 1, 1],
-      [0, 1, 0],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, jColor);
-        }
-      }
-    }
-    currentJ = rotatedState; //error
-
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0],
-      [1, 1, 1],
-      [0, 0, 1],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, jColor);
-        }
-      }
-    }
-    currentJ = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, jColor);
-        }
-      }
-    }
-    currentJ = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = jShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, jColor);
-        }
-      }
-    }
-    currentJ = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function rotateS(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 1, 0],
-      [0, 1, 1],
-      [0, 0, 1],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, sColor);
-        }
-      }
-    }
-    currentS = rotatedState; //error
-
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0],
-      [0, 1, 1],
-      [1, 1, 0],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, sColor);
-        }
-      }
-    }
-    currentS = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [0, 1, 0],
-      [1, 1, 0],
-      [1, 0, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, sColor);
-        }
-      }
-    }
-    currentS = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = sShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, sColor);
-        }
-      }
-    }
-    currentS = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function rotateZ(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 0, 1],
-      [0, 1, 1],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, zColor);
-        }
-      }
-    }
-    currentZ = rotatedState; //error
-
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0],
-      [1, 1, 0],
-      [0, 1, 1],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, zColor);
-        }
-      }
-    }
-    currentZ = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [0, 1, 0],
-      [1, 1, 0],
-      [1, 0, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, zColor);
-        }
-      }
-    }
-    currentZ = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = zShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, zColor);
-        }
-      }
-    }
-    currentZ = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function rotateT(x, y) {
-  if (currentRotation === 0) {
-    rotatedState = [
-      [0, 1, 0],
-      [0, 1, 1],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, tColor);
-        }
-      }
-    }
-    currentT = rotatedState; //error
-
-    currentRotation++;
-  } else if (currentRotation === 1) {
-    rotatedState = [
-      [0, 0, 0],
-      [1, 1, 1],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, tColor);
-        }
-      }
-    }
-    currentT = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 2) {
-    rotatedState = [
-      [0, 1, 0],
-      [1, 1, 0],
-      [0, 1, 0],
-    ];
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, tColor);
-        }
-      }
-    }
-    currentT = rotatedState;
-    currentRotation++;
-  } else if (currentRotation === 3) {
-    rotatedState = tShape;
-    clearPrevious();
-    for (let i = 0; i < rotatedState.length; i++) {
-      for (let j = 0; j < rotatedState[i].length; j++) {
-        if (rotatedState[i][j]) {
-          drawBlock(x + j, y + i, tColor);
-        }
-      }
-    }
-    currentT = rotatedState;
-    currentRotation = 0;
-  }
-}
-
-function drawBlock(x, y, color) {
-  ctx.beginPath(x * 40, y * 40);
-  ctx.rect(x * 40, y * 40, 40 - padding * 2, 40 - padding * 2);
-  ctx.fillStyle = color;
-
-  ctx.fill();
-  ctx.strokeStyle = "black";
-  ctx.stroke();
-}
-
-function clearPrevious() {
-  for (let i = 0; i < grid.length; i++) {
-    for (let j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] !== 0) {
-        drawBlock(i, j, "white");
-      }
-    }
-  }
-}
-
-function sendJ() {
-  currentRotation = 0;
-  currentPiece = "J";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawJ(startX, startY);
-}
-
-function drawJ(x, y) {
-  for (let i = 0; i < jShape.length; i++) {
-    for (let j = 0; j < jShape[i].length; j++) {
-      if (jShape[i][j]) {
-        drawBlock(x + j, y + i, jColor);
-      }
-    }
-  }
-}
-
-// function rotateJ(x, y) {
-//   if (currentRotation === 0) {
-//     rotatedState = [
-//       [1, 1, 1],
-//       [0, 0, 1],
-//     ];
-//     clearPrevious();
-//     for (let i = 0; i < rotatedState.length; i++) {
-//       for (let j = 0; j < rotatedState[i].length; j++) {
-//         if (rotatedState[i][j]) {
-//           drawBlock(x + j, y + i, "green");
-//         }
-//       }
-//     }
-//     currentL = rotatedState; //error
-
-//     currentRotation++;
-//   } else if (currentRotation === 1) {
-//     rotatedState = [
-//       [1, 1],
-//       [0, 1],
-//       [0, 1],
-//     ];
-//     clearPrevious();
-
-//     for (let i = 0; i < rotatedState.length; i++) {
-//       for (let j = 0; j < rotatedState[i].length; j++) {
-//         if (rotatedState[i][j]) {
-//           drawBlock(x + j, y + i, "green");
-//         }
-//       }
-//     }
-//     currentL = rotatedState;
-//     currentRotation++;
-//   } else if (currentRotation === 2) {
-//     rotatedState = [
-//       [0, 0, 1],
-//       [1, 1, 1],
-//     ];
-//     clearPrevious();
-//     for (let i = 0; i < rotatedState.length; i++) {
-//       for (let j = 0; j < rotatedState[i].length; j++) {
-//         if (rotatedState[i][j]) {
-//           drawBlock(x + j, y + i, "green");
-//         }
-//       }
-//     }
-//     currentL = rotatedState;
-//     currentRotation++;
-//   } else if (currentRotation === 3) {
-//     rotatedState = [
-//       [0, 1],
-//       [0, 1],
-//       [1, 1],
-//     ];
-//     clearPrevious();
-//     for (let i = 0; i < rotatedState.length; i++) {
-//       for (let j = 0; j < rotatedState[i].length; j++) {
-//         if (rotatedState[i][j]) {
-//           drawBlock(x + j, y + i, "green");
-//         }
-//       }
-//     }
-//     currentL = rotatedState;
-//     currentRotation = 0;
-//   }
-// }
-
-function sendO() {
-  currentRotation = 0;
-  currentPiece = "O";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawO(startX, startY);
-}
-
-function drawO(x, y) {
-  for (let i = 0; i < oShape.length; i++) {
-    for (let j = 0; j < oShape[i].length; j++) {
-      if (oShape[i][j]) {
-        drawBlock(x + j, y + i, oColor);
-      }
-    }
-  }
-}
-
-function sendS() {
-  currentRotation = 0;
-  currentPiece = "S";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawS(startX, startY);
-}
-
-function drawS(x, y) {
-  for (let i = 0; i < sShape.length; i++) {
-    for (let j = 0; j < sShape[i].length; j++) {
-      if (sShape[i][j]) {
-        drawBlock(x + j, y + i, sColor);
-      }
-    }
-  }
-}
-
-function sendT() {
-  currentRotation = 0;
-  currentPiece = "T";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawT(startX, startY);
-}
-
-function drawT(x, y) {
-  for (let i = 0; i < tShape.length; i++) {
-    for (let j = 0; j < tShape[i].length; j++) {
-      if (tShape[i][j]) {
-        drawBlock(x + j, y + i, tColor);
-      }
-    }
-  }
-}
-
-function sendZ() {
-  currentRotation = 0;
-  currentPiece = "Z";
-
-  const startX = 4;
-  const startY = 0;
-
-  currentX = startX;
-  currentY = startY;
-  drawZ(startX, startY);
-}
-
-function drawZ(x, y) {
-  for (let i = 0; i < zShape.length; i++) {
-    for (let j = 0; j < zShape[i].length; j++) {
-      if (zShape[i][j]) {
-        drawBlock(x + j, y + i, zColor);
-      }
-    }
-  }
-}
-
-// function resetLShape() {
-//   currentL = lShape;
-// }
 
 function sendRandomPiece() {
   const randomIndex = Math.floor(Math.random() * pieces.length);
@@ -862,9 +169,705 @@ function sendRandomPiece() {
     default:
       console.error("Unknown piece:", randomPiece);
   }
+  pieceInMotion = true;
+}
+
+function moveDown() {
+  if (currentY === grid[0].length - 1 - currentHeight) {
+    console.log("can't move down");
+    pieceInMotion = false;
+    sendRandomPiece();
+  } else {
+    clearPrevious();
+    currentY++;
+    if (currentPiece === "I") {
+      drawI(currentX, currentY);
+    } else if (currentPiece === "L") {
+      drawL(currentX, currentY);
+    } else if (currentPiece === "J") {
+      drawJ(currentX, currentY);
+    } else if (currentPiece === "S") {
+      drawS(currentX, currentY);
+    } else if (currentPiece === "Z") {
+      drawZ(currentX, currentY);
+    } else if (currentPiece === "T") {
+      drawT(currentX, currentY);
+    } else if (currentPiece === "O") {
+      drawO(currentX, currentY);
+    }
+  }
+  console.log(grid);
+}
+
+function moveLeft() {
+  console.log(currentX);
+  if (currentX === 0) {
+    console.log("can't move left");
+  } else {
+    clearPrevious();
+    currentX--;
+    if (currentPiece === "I") {
+      drawI(currentX, currentY);
+    } else if (currentPiece === "L") {
+      drawL(currentX, currentY);
+    } else if (currentPiece === "J") {
+      drawJ(currentX, currentY);
+    } else if (currentPiece === "S") {
+      drawS(currentX, currentY);
+    } else if (currentPiece === "Z") {
+      drawZ(currentX, currentY);
+    } else if (currentPiece === "T") {
+      drawT(currentX, currentY);
+    } else if (currentPiece === "O") {
+      drawO(currentX, currentY);
+    }
+  }
+}
+
+function moveRight() {
+  console.log(currentX);
+
+  if (currentX === grid.length - 1 - currentWidth) {
+    console.log("can't move right");
+  } else {
+    clearPrevious();
+    currentX++;
+    if (currentPiece === "I") {
+      drawI(currentX, currentY);
+    } else if (currentPiece === "L") {
+      drawL(currentX, currentY);
+    } else if (currentPiece === "J") {
+      drawJ(currentX, currentY);
+    } else if (currentPiece === "S") {
+      drawS(currentX, currentY);
+    } else if (currentPiece === "Z") {
+      drawZ(currentX, currentY);
+    } else if (currentPiece === "T") {
+      drawT(currentX, currentY);
+    } else if (currentPiece === "O") {
+      drawO(currentX, currentY);
+    }
+  }
+}
+
+function drawBlock(x, y, color) {
+  ctx.beginPath(x * 40, y * 40);
+  ctx.rect(x * 40, y * 40, 40 - padding * 2, 40 - padding * 2);
+  ctx.fillStyle = color;
+
+  ctx.fill();
+  ctx.strokeStyle = "black";
+  ctx.stroke();
+}
+
+function clearPrevious() {
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] !== 0) {
+        drawBlock(i, j, "white");
+      }
+    }
+  }
+}
+
+function drawI(x, y) {
+  for (let i = 0; i < currentI.length; i++) {
+    for (let j = 0; j < currentI[i].length; j++) {
+      if (currentI[i][j]) {
+        drawBlock(x + j, y + i, iColor);
+      }
+    }
+  }
+}
+function drawL(x, y) {
+  for (let i = 0; i < currentL.length; i++) {
+    for (let j = 0; j < currentL[i].length; j++) {
+      if (currentL[i][j]) {
+        drawBlock(x + j, y + i, lColor);
+      }
+    }
+  }
+}
+function drawJ(x, y) {
+  for (let i = 0; i < currentJ.length; i++) {
+    for (let j = 0; j < currentJ[i].length; j++) {
+      if (currentJ[i][j]) {
+        drawBlock(x + j, y + i, jColor);
+      }
+    }
+  }
+}
+function drawO(x, y) {
+  for (let i = 0; i < currentO.length; i++) {
+    for (let j = 0; j < currentO[i].length; j++) {
+      if (currentO[i][j]) {
+        drawBlock(x + j, y + i, oColor);
+      }
+    }
+  }
+}
+function drawS(x, y) {
+  for (let i = 0; i < currentS.length; i++) {
+    for (let j = 0; j < currentS[i].length; j++) {
+      if (currentS[i][j]) {
+        drawBlock(x + j, y + i, sColor);
+      }
+    }
+  }
+}
+function drawZ(x, y) {
+  for (let i = 0; i < currentZ.length; i++) {
+    for (let j = 0; j < currentZ[i].length; j++) {
+      if (currentZ[i][j]) {
+        drawBlock(x + j, y + i, zColor);
+      }
+    }
+  }
+}
+function drawT(x, y) {
+  for (let i = 0; i < currentT.length; i++) {
+    for (let j = 0; j < currentT[i].length; j++) {
+      if (currentT[i][j]) {
+        drawBlock(x + j, y + i, tColor);
+      }
+    }
+  }
+}
+
+function sendI() {
+  currentPiece = "I";
+  currentRotation = 0;
+  currentWidth = 4;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawI(startX, startY);
+}
+function sendL() {
+  currentRotation = 0;
+  currentPiece = "L";
+  currentWidth = 3;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawL(startX, startY);
+}
+function sendJ() {
+  currentRotation = 0;
+  currentPiece = "J";
+  currentWidth = 3;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawJ(startX, startY);
+}
+function sendO() {
+  currentRotation = 0;
+  currentPiece = "O";
+  currentWidth = 2;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawO(startX, startY);
+}
+function sendS() {
+  currentRotation = 0;
+  currentPiece = "S";
+  currentWidth = 3;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawS(startX, startY);
+}
+function sendZ() {
+  currentRotation = 0;
+  currentPiece = "Z";
+  currentWidth = 3;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawZ(startX, startY);
+}
+function sendT() {
+  currentRotation = 0;
+  currentPiece = "T";
+  currentWidth = 3;
+  currentHeight = 2;
+
+  const startX = 4;
+  const startY = 0;
+
+  currentX = startX;
+  currentY = startY;
+  drawT(startX, startY);
+}
+
+function rotateI(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+      [0, 0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, iColor);
+        }
+      }
+    }
+    currentI = rotatedState; //error
+    currentWidth = 4;
+    currentHeight = 4;
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0, 0],
+      [0, 0, 0, 0],
+      [1, 1, 1, 1],
+      [0, 0, 0, 0],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, iColor);
+        }
+      }
+    }
+    currentI = rotatedState;
+    currentWidth = 4;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, iColor);
+        }
+      }
+    }
+    currentI = rotatedState;
+    currentWidth = 2;
+    currentHeight = 4;
+    currentRotation++;
+  } else if (currentRotation === 3) {
+    rotatedState = iShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, iColor);
+        }
+      }
+    }
+    currentI = rotatedState;
+    currentWidth = 4;
+    currentHeight = 2;
+    currentRotation = 0;
+  }
+}
+function rotateL(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 1, 0],
+      [0, 1, 0],
+      [0, 1, 1],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, lColor);
+        }
+      }
+    }
+    currentL = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0],
+      [1, 1, 1],
+      [1, 0, 0],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, lColor);
+        }
+      }
+    }
+    currentL = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [1, 1, 0],
+      [0, 1, 0],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, lColor);
+        }
+      }
+    }
+    currentL = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 3) {
+    rotatedState = lShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, lColor);
+        }
+      }
+    }
+    currentJ = rotatedState;
+    currentWidth = 3;
+    currentHeight = 2;
+    currentRotation = 0;
+  }
+}
+function rotateJ(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 1, 1],
+      [0, 1, 0],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, jColor);
+        }
+      }
+    }
+    currentWidth = 3;
+    currentHeight = 3;
+    currentJ = rotatedState; //error
+
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 0, 1],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, jColor);
+        }
+      }
+    }
+    currentJ = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [0, 1, 0],
+      [0, 1, 0],
+      [1, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, jColor);
+        }
+      }
+    }
+    currentJ = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 3) {
+    rotatedState = jShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, jColor);
+        }
+      }
+    }
+    currentJ = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+    currentRotation = 0;
+  }
+}
+function rotateS(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 1, 0],
+      [0, 1, 1],
+      [0, 0, 1],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, sColor);
+        }
+      }
+    }
+    currentS = rotatedState; //error
+    currentWidth = 3;
+    currentHeight = 3;
+
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0],
+      [0, 1, 1],
+      [1, 1, 0],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, sColor);
+        }
+      }
+    }
+    currentS = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 0, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, sColor);
+        }
+      }
+    }
+    currentS = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 3) {
+    rotatedState = sShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, sColor);
+        }
+      }
+    }
+    currentS = rotatedState;
+    currentWidth = 3;
+    currentHeight = 2;
+
+    currentRotation = 0;
+  }
+}
+function rotateZ(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 0, 1],
+      [0, 1, 1],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, zColor);
+        }
+      }
+    }
+    currentZ = rotatedState; //error
+    currentWidth = 3;
+    currentHeight = 3;
+
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0],
+      [1, 1, 0],
+      [0, 1, 1],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, zColor);
+        }
+      }
+    }
+    currentZ = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [0, 1, 0],
+      [1, 1, 0],
+      [1, 0, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, zColor);
+        }
+      }
+    }
+    currentZ = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+
+    currentRotation++;
+  } else if (currentRotation === 3) {
+    rotatedState = zShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, zColor);
+        }
+      }
+    }
+    currentZ = rotatedState;
+    currentWidth = 2;
+    currentHeight = 3;
+    currentRotation = 0;
+  }
+}
+function rotateT(x, y) {
+  if (currentRotation === 0) {
+    rotatedState = [
+      [0, 1, 0],
+      [0, 1, 1],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, tColor);
+        }
+      }
+    }
+    currentT = rotatedState; //error
+    currentWidth = 3;
+    currentHeight = 3;
+
+    currentRotation++;
+  } else if (currentRotation === 1) {
+    rotatedState = [
+      [0, 0, 0],
+      [1, 1, 1],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, tColor);
+        }
+      }
+    }
+    currentT = rotatedState;
+    currentWidth = 3;
+    currentHeight = 3;
+    currentRotation++;
+  } else if (currentRotation === 2) {
+    rotatedState = [
+      [0, 1, 0],
+      [1, 1, 0],
+      [0, 1, 0],
+    ];
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, tColor);
+        }
+      }
+    }
+    currentT = rotatedState;
+    currentRotation++;
+    currentWidth = 2;
+    currentHeight = 3;
+  } else if (currentRotation === 3) {
+    rotatedState = tShape;
+    clearPrevious();
+    for (let i = 0; i < rotatedState.length; i++) {
+      for (let j = 0; j < rotatedState[i].length; j++) {
+        if (rotatedState[i][j]) {
+          drawBlock(x + j, y + i, tColor);
+        }
+      }
+    }
+    currentT = rotatedState;
+    currentWidth = 3;
+    currentHeight = 2;
+    currentRotation = 0;
+  }
 }
 
 $(() => {
   init();
-  sendRandomPiece();
 });
