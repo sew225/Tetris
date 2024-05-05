@@ -193,7 +193,7 @@ function rotateL(x, y) {
         }
       }
     }
-    lShape = rotatedState;
+    currentL = rotatedState; //error
 
     currentRotation++;
   } else if (currentRotation === 1) {
@@ -211,7 +211,7 @@ function rotateL(x, y) {
         }
       }
     }
-    lShape = rotatedState;
+    currentL = rotatedState;
     currentRotation++;
   } else if (currentRotation === 2) {
     rotatedState = [
@@ -226,7 +226,7 @@ function rotateL(x, y) {
         }
       }
     }
-    lShape = rotatedState;
+    currentL = rotatedState;
     currentRotation++;
   } else if (currentRotation === 3) {
     rotatedState = [
@@ -261,7 +261,7 @@ function clearPrevious() {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
       if (grid[i][j] !== 0) {
-        drawBlock(j, i, "white"); // Assuming "white" is your background color
+        drawBlock(j, i, "white"); 
       }
     }
   }
