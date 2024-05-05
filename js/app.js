@@ -121,16 +121,18 @@ function setupGrid() {
     ctx.lineTo(i, ch - padding);
     ctx.stroke();
     grid.push([]);
-    for (let j = 0; j <= ch; j += 40) {
-      ctx.moveTo(i, j + padding);
-      ctx.lineTo(cw, j + padding);
-      ctx.strokeStyle = "black";
-      ctx.stroke();
-      grid[col].push(row);
-      row++;
+    col++; // Increment column counter
+  }
+
+  // Draw horizontal lines and fill in the grid array
+  for (let j = 0; j <= ch; j += 40) {
+    ctx.moveTo(0, j);
+    ctx.lineTo(cw, j);
+    ctx.stroke();
+    for (let k = 0; k < col; k++) {
+      grid[k].push(0); // Initialize each cell as empty (0)
     }
-    col++;
-    row = 0;
+    row++; // Increment row counter
   }
 }
 
@@ -173,10 +175,13 @@ function sendRandomPiece() {
 }
 
 function moveDown() {
-  if (currentY === grid[0].length - 1 - currentHeight) {
+  if (
+    currentY === grid[0].length - 1 - currentHeight ||
+    grid[currentX][currentY] === 1
+  ) {
     console.log("can't move down");
-    pieceInMotion = false;
-    sendRandomPiece();
+    handlePieceStop();
+    // sendRandomPiece();
   } else {
     clearPrevious();
     currentY++;
@@ -250,9 +255,53 @@ function moveRight() {
   }
 }
 
+function handlePieceStop() {
+  updateGrid();
+  sendRandomPiece();
+  pieceInMotion = false;
+}
+
+function updateGrid() {
+  let shape;
+  switch (currentPiece) {
+    case "I":
+      shape = currentI;
+      break;
+    case "L":
+      shape = currentL;
+      break;
+    case "J":
+      shape = currentJ;
+      break;
+    case "O":
+      shape = currentO;
+      break;
+    case "S":
+      shape = currentS;
+      break;
+    case "Z":
+      shape = currentZ;
+      break;
+    case "T":
+      shape = currentT;
+      break;
+  }
+  for (let i = 0; i < shape.length; i++) {
+    for (let j = 0; j < shape[i].length; j++) {
+      if (shape[i][j] !== 0) {
+        const row = currentY + i;
+        const col = currentX + j;
+        grid[col][row] = shape[i][j];
+      }
+    }
+  }
+  console.log(grid);
+  console.log(shape);
+}
+
 function drawBlock(x, y, color) {
   ctx.beginPath(x * 40, y * 40);
-  ctx.rect(x * 40, y * 40, 40 - padding * 2, 40 - padding * 2);
+  ctx.rect(x * 40, y * 40, 40, 40);
   ctx.fillStyle = color;
 
   ctx.fill();
@@ -263,7 +312,7 @@ function drawBlock(x, y, color) {
 function clearPrevious() {
   for (let i = 0; i < grid.length; i++) {
     for (let j = 0; j < grid[i].length; j++) {
-      if (grid[i][j] !== 0) {
+      if (grid[i][j] === 0) {
         drawBlock(i, j, "white");
       }
     }
