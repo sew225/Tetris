@@ -5,18 +5,18 @@ const cw = canvas.width;
 const ch = canvas.height;
 const padding = 0;
 
-const lColor = "orange";
 const iColor = "cyan";
-const zColor = "red";
+const lColor = "orange";
 const jColor = "blue";
-const sColor = "#0FFF50"; //neon green
-const tColor = "purple";
 const oColor = "yellow";
+const sColor = "#0FFF50"; //neon green
+const zColor = "red";
+const tColor = "purple";
 
 let currentWidth;
 let currentHeight;
-
 let currentPiece;
+
 let currentX;
 let currentY;
 let currentRotation = 0;
@@ -103,25 +103,50 @@ function init() {
       }
     }
   });
-  if (pieceInMotion) {
-    intervalId = setInterval(moveDown, 1000);
-  }
+  // if (pieceInMotion) {
+  //   intervalId = setInterval(moveDown, 1000);
+  // }
 
   console.log("current piece: " + currentPiece);
   console.log(grid);
 }
 
+function shapeCheck() {
+  let shape;
+  switch (currentPiece) {
+    case "I":
+      shape = currentI;
+      break;
+    case "L":
+      shape = currentL;
+      break;
+    case "J":
+      shape = currentJ;
+      break;
+    case "O":
+      shape = currentO;
+      break;
+    case "S":
+      shape = currentS;
+      break;
+    case "Z":
+      shape = currentZ;
+      break;
+    case "T":
+      shape = currentT;
+      break;
+  }
+  return shape;
+}
+
 function setupGrid() {
-  let col = 0;
-  let row = 0;
   ctx.strokeStyle = "black";
 
   for (let i = 0; i <= cw; i += 40) {
-    ctx.moveTo(i, padding);
-    ctx.lineTo(i, ch - padding);
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, ch);
     ctx.stroke();
-    grid.push([]);
-    col++; // Increment column counter
+    grid.push(Array(15).fill(0));
   }
 
   // Draw horizontal lines and fill in the grid array
@@ -129,13 +154,23 @@ function setupGrid() {
     ctx.moveTo(0, j);
     ctx.lineTo(cw, j);
     ctx.stroke();
-    for (let k = 0; k < col; k++) {
-      grid[k].push(0); // Initialize each cell as empty (0)
-    }
-    row++; // Increment row counter
   }
 }
 
+function collisionCheck() {
+  let currentShape = shapeCheck();
+  for (let i = 0; i < currentShape.length; i++) {
+    for (let j = 0; j < currentShape[i].length; j++) {
+      if (currentShape[i][j] !== 0) {
+        const row = currentX + j + 1;
+        if (row >= grid.length || grid[row][currentY + i] !== 0) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+}
 function sendRandomPiece() {
   const randomIndex = Math.floor(Math.random() * pieces.length);
   const randomPiece = pieces[randomIndex];
@@ -175,10 +210,7 @@ function sendRandomPiece() {
 }
 
 function moveDown() {
-  if (
-    currentY === grid[0].length - 1 - currentHeight ||
-    grid[currentX][currentY] === 1
-  ) {
+  if (currentY >= grid[0].length - currentHeight || collisionCheck()) {
     console.log("can't move down");
     handlePieceStop();
     // sendRandomPiece();
@@ -262,51 +294,25 @@ function handlePieceStop() {
 }
 
 function updateGrid() {
-  let shape;
-  switch (currentPiece) {
-    case "I":
-      shape = currentI;
-      break;
-    case "L":
-      shape = currentL;
-      break;
-    case "J":
-      shape = currentJ;
-      break;
-    case "O":
-      shape = currentO;
-      break;
-    case "S":
-      shape = currentS;
-      break;
-    case "Z":
-      shape = currentZ;
-      break;
-    case "T":
-      shape = currentT;
-      break;
-  }
-  for (let i = 0; i < shape.length; i++) {
-    for (let j = 0; j < shape[i].length; j++) {
-      if (shape[i][j] !== 0) {
+  let currentShape = shapeCheck();
+  for (let i = 0; i < currentShape.length; i++) {
+    for (let j = 0; j < currentShape[i].length; j++) {
+      if (currentShape[i][j] !== 0) {
         const row = currentY + i;
         const col = currentX + j;
-        grid[col][row] = shape[i][j];
+        grid[col][row] = currentShape[i][j];
       }
     }
   }
   console.log(grid);
-  console.log(shape);
 }
 
 function drawBlock(x, y, color) {
-  ctx.beginPath(x * 40, y * 40);
-  ctx.rect(x * 40, y * 40, 40, 40);
   ctx.fillStyle = color;
 
-  ctx.fill();
+  ctx.fillRect(x * 40, y * 40, 40, 40);
   ctx.strokeStyle = "black";
-  ctx.stroke();
+  ctx.strokeRect(x * 40, y * 40, 40, 40);
 }
 
 function clearPrevious() {
@@ -513,7 +519,7 @@ function rotateI(x, y) {
     }
     currentI = rotatedState;
     currentWidth = 4;
-    currentHeight = 3;
+    currentHeight = 4;
     currentRotation++;
   } else if (currentRotation === 2) {
     rotatedState = [
