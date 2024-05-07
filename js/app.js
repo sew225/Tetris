@@ -1,14 +1,14 @@
 (function () {
   const canvas = document.getElementById("tetris");
   const context = canvas.getContext("2d");
-  canvas.width = 300; // this needs to be changed
-  canvas.height = 700; // this needs to be changed
+  canvas.width = 200; // this needs to be changed
+  canvas.height = 400; // this needs to be changed
   context.scale(20, 20);
 
-  let setMatrix = function (w, h) {
+  let setMatrix = function (width, height) {
     const matrix = [];
-    while (h--) {
-      matrix.push(new Array(w).fill(0));
+    while (height--) {
+      matrix.push(new Array(width).fill(0));
     }
     return matrix;
   };
