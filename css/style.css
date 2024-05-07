@@ -248,7 +248,7 @@ textarea {
 /*some changes*/
 
 body {
-  background-image: url("../tetris.jpg"); 
+  background-image: url("../tetris2.jpg"); 
   background-size: cover;
   margin: 0;
   padding: 0;
@@ -267,9 +267,10 @@ body {
 }
 
 #scoreboard {
-  color: white; 
+  color: black; 
   font-size: 24px;
   margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif; 
 }
 
 #start_game {
@@ -284,6 +285,7 @@ body {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 8px;
+  font-family: 'Roboto', sans-serif; 
 }
 
 #start_game:hover {
