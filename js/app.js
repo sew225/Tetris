@@ -1,9 +1,10 @@
-(function () {
+function init() {
   const canvas = document.getElementById("tetris");
   const context = canvas.getContext("2d");
-  canvas.width = 200; // this needs to be changed
-  canvas.height = 400; // this needs to be changed
+  canvas.width = 300; // this needs to be changed
+  canvas.height = 600; // this needs to be changed
   context.scale(20, 20);
+  let tempScore = 0;
 
   let setMatrix = function (width, height) {
     const matrix = [];
@@ -17,50 +18,44 @@
     if (type === "t") {
       return [
         [0, 0, 0],
-        ['#800080', '#800080', '#800080'],
-        [0, '#800080', 0]
+        ["#800080", "#800080", "#800080"],
+        [0, "#800080", 0],
       ];
-    }
-    else if (type === "o") {
+    } else if (type === "o") {
       return [
-        ['#ffff00', '#ffff00'],
-        ['#ffff00', '#ffff00']
+        ["#ffff00", "#ffff00"],
+        ["#ffff00", "#ffff00"],
       ];
-    }
-    else if (type === "l") {
+    } else if (type === "l") {
       return [
-        [0, '#ffa500', 0],
-        [0, '#ffa500', 0],
-        [0, '#ffa500', '#ffa500']
+        [0, "#ffa500", 0],
+        [0, "#ffa500", 0],
+        [0, "#ffa500", "#ffa500"],
       ];
-    }
-    else if (type === "j") {
+    } else if (type === "j") {
       return [
-        [0, '#0000ff', 0],
-        [0, '#0000ff', 0],
-        ['#0000ff', '#0000ff', 0]
+        [0, "#0000ff", 0],
+        [0, "#0000ff", 0],
+        ["#0000ff", "#0000ff", 0],
       ];
-    }
-    else if (type === "i") {
+    } else if (type === "i") {
       return [
-        [0, '#00ffff', 0, 0],
-        [0, '#00ffff', 0, 0],
-        [0, '#00ffff', 0, 0],
-        [0, '#00ffff', 0, 0]
+        [0, "#00ffff", 0, 0],
+        [0, "#00ffff", 0, 0],
+        [0, "#00ffff", 0, 0],
+        [0, "#00ffff", 0, 0],
       ];
-    }
-    else if (type === "s") {
+    } else if (type === "s") {
       return [
-        [0, '#008000', '#008000'],
-        ['#008000', '#008000', 0],
-        [0, 0, 0]
+        [0, "#008000", "#008000"],
+        ["#008000", "#008000", 0],
+        [0, 0, 0],
       ];
-    }
-    else if (type === "z") {
+    } else if (type === "z") {
       return [
-        ['#ff0000', '#ff0000', 0],
-        [0, '#ff0000', '#ff0000'],
-        [0, 0, 0]
+        ["#ff0000", "#ff0000", 0],
+        [0, "#ff0000", "#ff0000"],
+        [0, 0, 0],
       ];
     }
   };
@@ -89,7 +84,7 @@
     const [m, o] = [player.matrix, player.pos];
     for (let y = 0; y < m.length; ++y) {
       for (let x = 0; x < m[y].length; ++x) {
-        if (m[y][x] !== 0 && ((area[y + o.y] && area[y + o.y][x + o.x]) !== 0)) {
+        if (m[y][x] !== 0 && (area[y + o.y] && area[y + o.y][x + o.x]) !== 0) {
           return true;
         }
       }
@@ -126,19 +121,12 @@
   let rotate = function (matrix, direction) {
     for (let y = 0; y < matrix.length; ++y) {
       for (let x = 0; x < y; ++x) {
-        [
-          matrix[x][y],
-          matrix[y][x]
-        ] = [
-            matrix[y][x],
-            matrix[x][y],
-          ]
+        [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
       }
     }
     if (direction > 0) {
-      matrix.forEach(row => row.reverse());
-    }
-    else {
+      matrix.forEach((row) => row.reverse());
+    } else {
       matrix.reverse();
     }
   };
@@ -147,9 +135,10 @@
     const pieces = "ijlostz"; // the shapes
     player.matrix = setPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
-    player.pos.x = (Math.floor(area[0].length / 2)) - (Math.floor(player.matrix[0].length / 2));
+    player.pos.x =
+      Math.floor(area[0].length / 2) - Math.floor(player.matrix[0].length / 2);
     if (collide(area, player)) {
-      area.forEach(row => row.fill(0));
+      area.forEach((row) => row.fill(0));
       player.score = 0;
       gameRun = false;
       // only in the case that the player reaches the top of the grid
@@ -202,10 +191,23 @@
     drawMatrix(player.matrix, player.pos);
   };
 
-  let dropInter = 100;
+  let dropInter = 60;
   let time = 0;
 
   let update = function () {
+    let scoreIncrease = player.score - tempScore;
+
+    if (scoreIncrease >= 50) {
+      dropInter = dropInter / 2;
+      //doube speed
+      tempScore = player.score;
+      console.log(
+        "speed increase: block moving down 1 unit every " +
+          dropInter +
+          "milliseconds"
+      );
+    }
+
     time++;
     if (time >= dropInter) {
       playerDrop();
@@ -223,16 +225,14 @@
     $("#scoreboard").text("Score: " + player.score);
   };
 
-  // need to make a function for when the game ends
-
-  const area = setMatrix(10, 20);
+  const area = setMatrix(15, 30);
   const player = {
     pos: {
       x: 0,
-      y: 0
+      y: 0,
     },
     matrix: null,
-    score: 0
+    score: 0,
   };
   const move = 1;
   let gameLoop;
@@ -243,16 +243,13 @@
   $(document).keydown(function (e) {
     if (e.keyCode === 37) {
       playerMove(-move);
-    }
-    else if (e.keyCode === 39) {
+    } else if (e.keyCode === 39) {
       playerMove(+move);
-    }
-    else if (e.keyCode === 40) {
+    } else if (e.keyCode === 40) {
       if (gameRun) {
         playerDrop();
       }
-    }
-    else if (e.keyCode === 38) {
+    } else if (e.keyCode === 38) {
       playerRotate(-move);
     }
   });
@@ -263,10 +260,13 @@
     gameLoop = setInterval(function () {
       if (gameRun) {
         update();
-      }
-      else {
+      } else {
       }
     }, 10);
     $(this).prop("disabled", true);
   });
-})();
+}
+
+$(() => {
+  init();
+});
