@@ -152,6 +152,11 @@
       area.forEach(row => row.fill(0));
       player.score = 0;
       gameRun = false;
+      // only in the case that the player reaches the top of the grid
+      $("#gameOverScreen").show();
+      setTimeout(function () {
+        $("#gameOverScreen").hide();
+      }, 2000); // this is in milisecond
     }
   };
 
