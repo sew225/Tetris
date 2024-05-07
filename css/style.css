@@ -245,46 +245,25 @@ textarea {
   }
 }
 
+/*some changes*/
+
 body {
+  background-image: url("tetris.jpg");
+  background-size: cover;
+  margin: 0;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; 
-  margin: 0; 
 }
 
 canvas {
-  background-color: #f0f0f0;
-  border: 1px solid #999999;
+  border: 1px solid white;
 }
-
-/*Score board stuff*/ 
 
 #scoreboard {
-  font-family: Arial, sans-serif;
-  font-size: 24px;
-  font-weight: bold;
-  color: #ffffff;
-  background-color: #333333;
-  padding: 10px;
-  border-radius: 5px;
-  margin-top: 20px;
-}
-
-#start_game {
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: #ffffff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-#start_game:hover {
-  background-color: #45a049;
+  color: white;
+  font-size: 20px;
 }
 
 

@@ -28,14 +28,24 @@
     background-size: cover;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  canvas {
+    border: 1px solid white;
+  }
+
+  #scoreboard {
+    color: white;
+    font-size: 20px;
   }
 </style>
 
 <body>
-  <canvas id="tetris" style="border:1px solid white;" width="400" height="600">
-    <!-- Add your site or application content here -->
-    <p>Hello world! This is HTML5 Boilerplate.</p>
-  </canvas>
+
+  <canvas id="tetris" width="300" height="600"></canvas>
 
   <div id="scoreboard">Score: 0</div>
   <button id="start_game">Start Game</button>

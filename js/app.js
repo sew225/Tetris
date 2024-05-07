@@ -1,8 +1,8 @@
 (function(){
   const canvas=document.getElementById("tetris");
   const context=canvas.getContext("2d");
-  canvas.width = 300; // Adjusting canvas width for a 10x20 grid
-  canvas.height = 700; // Adjusting canvas height for a 10x20 grid
+  canvas.width = 300; // this needs to be changed
+  canvas.height = 700; // this needs to be changed
   context.scale(20,20);
 
   let makeMatrix=function(w,h){
@@ -211,7 +211,10 @@
     context.textAlign = "right";
     context.textBaseline = "top";
     context.fillText("Score: " + player.score, canvas.width - 10, 10); // Position the score to the right of the canvas
-  };
+    
+    // Update scoreboard element in HTML
+    $("#scoreboard").text("Score: " + player.score);
+};
 
   // need to make a function for when the game ends
 
