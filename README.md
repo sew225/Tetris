@@ -1,2 +1,3 @@
 # Tetris
-CSE 264 Final Project
+
+# Simple Tetris Game built using a Canvas within HTML and Jquery
